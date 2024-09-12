@@ -6,7 +6,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 import requests
 import json
 from datetime import datetime
-test = 0
+
 # Global variables for message parameters
 message_template, term_in_tamil, due_date = "", "", ""
 
