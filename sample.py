@@ -270,6 +270,7 @@ def edit_parameters(template_label, term_label, date_label):
     ctk.CTkButton(params_window, text="Save", command=lambda: save_parameters(option_menu_template, option_menu_term, entry_date), font=('Arial', 12)).pack(pady=10)
 
 # Add a new function to view the history
+# Function to view the history
 def view_whatsapp_history():
     
     def load_history():
@@ -291,17 +292,26 @@ def view_whatsapp_history():
         frame = ctk.CTkFrame(history_window)
         frame.pack(fill='both', expand=True, padx=10, pady=10)
         
-        # Create a Treeview for statistics on the left
-        stats_frame = ctk.CTkFrame(frame)
+        # Create a smaller frame for the statistics on the left
+        stats_frame = ctk.CTkFrame(frame, width=200)  # Adjust width here
         stats_frame.pack(side='left', fill='y', padx=(0, 10))
         
         stats_columns = ["Date", "Template Name", "Rows"]
         stats_treeview = ttk.Treeview(stats_frame, columns=stats_columns, show='headings', height=30)
-        for col in stats_columns:
-            stats_treeview.heading(col, text=col)
+        
+        # Set different column widths for each column in the statistics table
+        stats_treeview.heading("Date", text="Date")
+        stats_treeview.column("Date", width=100)  # Adjust the width for 'Date'
+        
+        stats_treeview.heading("Template Name", text="Template Name")
+        stats_treeview.column("Template Name", width=200)  # Adjust the width for 'Template Name'
+        
+        stats_treeview.heading("Rows", text="Rows")
+        stats_treeview.column("Rows", width=50)  # Adjust the width for 'Rows'
+        
         stats_treeview.pack(fill='y', expand=True)
         
-        # Create a Treeview for displaying history log on the right
+        # Create a larger frame for displaying history log on the right
         history_frame = ctk.CTkFrame(frame)
         history_frame.pack(side='right', fill='both', expand=True)
         
@@ -320,7 +330,6 @@ def view_whatsapp_history():
         history_scroll_x.pack(side='bottom', fill='x')
         history_treeview.configure(xscrollcommand=history_scroll_x.set)
         
-        # Function to load sheet statistics into the stats Treeview
         def load_statistics():
             # Clear existing statistics
             for item in stats_treeview.get_children():
@@ -330,16 +339,12 @@ def view_whatsapp_history():
             for sheet in history_spreadsheet.worksheets():
                 title = sheet.title
                 row_count = len(sheet.get_all_values()) - 1
-                # Assuming sheet names follow a format with date and template name
-                # Extract date and template name from the sheet title if possible
-                # Here, we are simply using the title and assuming the format is correct
                 date = title.split(" ")[0]  # Modify this logic based on actual sheet naming convention
                 template_name = title.split(" ")[1]  # Modify this logic based on actual sheet naming convention
                 stats_treeview.insert('', 'end', values=[date, template_name, row_count])
         
         load_statistics()
         
-        # Function to load data from the selected sheet into the history Treeview
         def load_sheet_data(event):
             selected_item = stats_treeview.selection()
             if not selected_item:
@@ -358,14 +363,9 @@ def view_whatsapp_history():
             for row in history_values[1:]:
                 history_treeview.insert('', 'end', values=row)
         
-        # Bind the selection event to load data
         stats_treeview.bind('<<TreeviewSelect>>', load_sheet_data)
-        
-        # Initialize with no selection
         stats_treeview.selection_set(stats_treeview.get_children()[0])
         load_sheet_data(None)
-        
-        # Destroy the loading window
     
     threading.Thread(target=load_history).start()
 
