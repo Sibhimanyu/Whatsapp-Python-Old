@@ -1,10 +1,8 @@
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import ttk, messagebox, Toplevel
-import threading, gspread, os, sys
+import threading, gspread, os, sys, requests, json
 from oauth2client.service_account import ServiceAccountCredentials
-import requests
-import json
 from datetime import datetime
 
 # Global variables for message parameters
@@ -45,7 +43,6 @@ def load_parameters_from_file():
             due_date = parameters.get("due_date", due_date)
             
 load_parameters_from_file()
-
 
 # Function to authenticate and open the Google Sheets (return entire spreadsheet if sheet_name is None)
 def open_google_sheet(sheet_url, sheet_name=None):
@@ -164,6 +161,7 @@ def extract_student_info(status_label, progress_var, progress_bar, treeview, err
     status_label.configure(text="Process completed.")
     progress_var.set("100.00%")
     progress_bar.set(1)  # Set progress bar to 100% at the end
+    stop_extraction()
 
 # Function to start the extraction process in a new thread
 def start_extraction(status_label, progress_var, progress_bar, treeview, error_label):
@@ -192,25 +190,26 @@ def clear_log(treeview):
 
 
 def show_toast(root, message, duration=2000):
-    # Create a new CTkToplevel window
+    # Create a new CTkToplevel window for the toast
     toast = ctk.CTkToplevel(root)
     toast.overrideredirect(True)  # Remove window decorations
     toast.attributes("-topmost", True)  # Keep it on top
-    toast.attributes("-alpha", 0.90)  # Slight transparency
-    
+    toast.attributes("-alpha", 0.95)  # Slight transparency
+
     # Calculate position to center the toast in the parent window
-    window_width = 300
-    window_height = 80
+    window_width = 320
+    window_height = 90
     x = root.winfo_x() + (root.winfo_width() // 2) - (window_width // 2)
     y = root.winfo_y() + (root.winfo_height() // 2) - (window_height // 2)
     toast.geometry(f"{window_width}x{window_height}+{x}+{y}")
 
-    # Create a frame to hold the message with styled colors and rounded corners
-    frame = ctk.CTkFrame(toast, corner_radius=6, fg_color=["#f2f2f2", "#333333"], border_width=0)
-    frame.pack(fill='both', expand=True, padx=10, pady=10)
+    # Create a seamless frame with no borders and smooth rounded corners
+    frame = ctk.CTkFrame(toast, corner_radius=10, fg_color=["#f2f2f2", "#333333"], border_width=0)
+    frame.pack(fill='both', expand=True)
 
-    # Create a label to display the message with transparent background
-    toast_label = ctk.CTkLabel(frame, text=message, text_color=["#333333", "#e0e0e0"], fg_color="transparent")
+    # Create a label to display the message with transparent background and centered text
+    toast_label = ctk.CTkLabel(frame, text=message, text_color=["#333333", "#e0e0e0"], 
+                               fg_color="transparent", font=("Arial", 14), anchor="center")
     toast_label.pack(fill='both', expand=True, padx=20, pady=10)
 
     # Close the toast after the set duration (default: 2000ms)
@@ -256,7 +255,7 @@ def edit_parameters(template_label, term_label, date_label):
 
     # Add the dropdown for term in Tamil
     ctk.CTkLabel(params_window, text="Term in Tamil", font=('Arial', 12)).pack(pady=5)
-    available_terms = ["முதல்", "இரண்டாம்", "Term 3", "முந்தைய ஆண்டுக்கான"]  # Replace with your actual terms
+    available_terms = ["முதல்", "இரண்டாம்", "மூன்றாம்", "முந்தைய ஆண்டுக்கான"]  # Replace with your actual terms
     option_menu_term = ctk.CTkOptionMenu(params_window, values=available_terms)
     option_menu_term.pack(pady=5)
     option_menu_term.set(term_in_tamil)  # Set the current term as selected
@@ -269,6 +268,7 @@ def edit_parameters(template_label, term_label, date_label):
 
     # Button to save the parameters
     ctk.CTkButton(params_window, text="Save", command=lambda: save_parameters(option_menu_template, option_menu_term, entry_date), font=('Arial', 12)).pack(pady=10)
+    ctk.CTkButton(params_window, text="Cancel", command=lambda: params_window.destroy(), font=('Arial', 12)).pack(pady=10)
 
 # Add a new function to view the history
 # Function to view the history
@@ -422,8 +422,7 @@ ctk.set_default_color_theme(resource_path("red.json"))  # Themes: "blue" (defaul
 
 root = ctk.CTk()
 root.title("WhatsApp Message Sender")
-root.geometry("1000x650")  # Increase window size for new labels
-root.attributes("-topmost", True)
+root.geometry("1300x650")  # Increase window size for new labels
 
 # Configure grid rows and columns for centering
 root.columnconfigure(0, weight=1)
