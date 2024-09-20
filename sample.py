@@ -8,6 +8,7 @@ from datetime import datetime
 # Global variables for message parameters
 message_template, term_in_tamil, due_date = "", "", ""
 
+
 settings_file = "parameters.json"
 
 def resource_path(relative_path):
