@@ -245,6 +245,7 @@ def edit_parameters(template_label, term_label, date_label):
     params_window = ctk.CTkToplevel()
     params_window.title("Edit Message Parameters")
     params_window.geometry("500x350")
+    params_window.attributes("-topmost", True)
 
     # Add the dropdown for message template selection
     ctk.CTkLabel(params_window, text="Message Template:", font=('Arial', 12)).pack(pady=5)
@@ -287,6 +288,7 @@ def view_whatsapp_history():
         history_window = Toplevel(root)
         history_window.title("WhatsApp Message History")
         history_window.geometry("1200x600")
+        history_window.attributes("-topmost", True)
         
         # Create a frame for the statistics and history view
         frame = ctk.CTkFrame(history_window)
@@ -421,6 +423,7 @@ ctk.set_default_color_theme(resource_path("red.json"))  # Themes: "blue" (defaul
 root = ctk.CTk()
 root.title("WhatsApp Message Sender")
 root.geometry("1000x650")  # Increase window size for new labels
+root.attributes("-topmost", True)
 
 # Configure grid rows and columns for centering
 root.columnconfigure(0, weight=1)
