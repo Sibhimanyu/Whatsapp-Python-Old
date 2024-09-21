@@ -8,7 +8,6 @@ from datetime import datetime
 # Global variables for message parameters
 message_template, term_in_tamil, due_date = "", "", ""
 
-
 settings_file = "parameters.json"
 
 def resource_path(relative_path):
@@ -123,10 +122,16 @@ def extract_student_info(status_label, progress_var, progress_bar, treeview, err
     status_label.configure(text="Starting...")
     
     sheet_url = "https://docs.google.com/spreadsheets/d/1HAL8ApMQMZqhH-8vUfQkobG9Ub38IWZ_bW0UrIDgHDA/edit#gid=0"
-    sample_sheet = open_google_sheet(sheet_url, "Sending")
+    sending_sheet = open_google_sheet(sheet_url, "Sending")
+    testing_sheet = open_google_sheet(sheet_url, "Test")
     sent_sheet = open_google_sheet(sheet_url, "Sent")
     
-    values = sample_sheet.get_all_values()
+    if checkbox_var.get():
+        values = testing_sheet.get_all_values()
+    else:
+        values = sending_sheet.get_all_values()
+    
+
     total_rows = len(values) - 1  # Subtract 1 to account for the header row
     processed_rows = 0
     
@@ -468,6 +473,10 @@ term_label.grid(row=1, column=1, padx=10, pady=5, sticky='w')
 ctk.CTkLabel(parameters_frame, text="Due Date:", font=('Arial', 12)).grid(row=2, column=0, padx=10, pady=5, sticky='e')
 date_label = ctk.CTkLabel(parameters_frame, text=due_date, font=('Arial', 12))
 date_label.grid(row=2, column=1, padx=10, pady=5, sticky='w')
+
+checkbox_var = ctk.BooleanVar(value=False)  # Default to checked
+checkbox = ctk.CTkCheckBox(root, text="Enable Test Mode", variable=checkbox_var, onvalue=True, offvalue=False)
+checkbox.grid(row=5, column=0, columnspan=2, padx=10, pady=5, sticky='w')
 
 # Frame for buttons
 button_frame = ctk.CTkFrame(root)
