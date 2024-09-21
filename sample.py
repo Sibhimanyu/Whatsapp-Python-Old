@@ -424,7 +424,7 @@ ctk.set_default_color_theme(resource_path("red.json"))  # Themes: "blue" (defaul
 root = ctk.CTk()
 root.title("WhatsApp Message Sender")
 root.geometry("1300x650")  # Increase window size for new labels
-root.iconbitmap("auro.png")
+root.iconbitmap(resource_path("auro.ico"))
 
 # Configure grid rows and columns for centering
 root.columnconfigure(0, weight=1)
