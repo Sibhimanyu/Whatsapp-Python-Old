@@ -441,6 +441,9 @@ root.rowconfigure(3, weight=0)
 root.rowconfigure(4, weight=0)
 root.rowconfigure(5, weight=0)
 root.rowconfigure(6, weight=1)
+root.rowconfigure(7, weight=0)
+root.columnconfigure(0, weight=1)
+root.columnconfigure(1, weight=1)
 
 # Progress and status labels
 ctk.CTkLabel(root, text="Progress:", font=('Arial', 12)).grid(row=0, column=0, padx=10, pady=5, sticky='e')
@@ -475,7 +478,7 @@ date_label = ctk.CTkLabel(parameters_frame, text=due_date, font=('Arial', 12))
 date_label.grid(row=2, column=1, padx=10, pady=5, sticky='w')
 
 checkbox_var = ctk.BooleanVar(value=False)  # Default to checked
-checkbox = ctk.CTkCheckBox(root, text="Enable Test Mode", variable=checkbox_var, onvalue=True, offvalue=False)
+checkbox = ctk.CTkCheckBox(root, text="Enable Sample Mode", variable=checkbox_var, onvalue=True, offvalue=False)
 checkbox.grid(row=5, column=0, columnspan=2, padx=10, pady=5, sticky='w')
 
 # Frame for buttons
@@ -496,8 +499,8 @@ stop_button.grid(row=0, column=1, padx=10)
 edit_button = ctk.CTkButton(button_frame, text="Edit Parameters", command=lambda: edit_parameters(template_label, term_label, date_label), font=('Arial', 12))
 edit_button.grid(row=0, column=2, padx=10)
 
-clear_button = ctk.CTkButton(button_frame, text="Clear Log", command=lambda: clear_log(treeview), font=('Arial', 12))
-clear_button.grid(row=0, column=3, padx=10)
+# clear_button = ctk.CTkButton(root, text="Clear Log", command=lambda: clear_log(treeview), font=('Arial', 12))
+# clear_button.grid(row=7, column=1, pady=10, sticky='e')
 
 export_button = ctk.CTkButton(button_frame, text="Export Log", command=lambda: export_log_to_history(treeview), font=('Arial', 12), state=tk.DISABLED)
 export_button.grid(row=0, column=4, padx=10)
@@ -506,10 +509,18 @@ view_history_button = ctk.CTkButton(button_frame, text="View History", command=v
 view_history_button.grid(row=0, column=5, padx=10)
 
 # Treeview for displaying log
+# Treeview for displaying log
 columns = ["DateTime", "Student", "Phone Number", "Due Fees", "Grade", "Section", "Message ID"]
 treeview = ttk.Treeview(root, columns=columns, show='headings', height=20)
 for col in columns:
     treeview.heading(col, text=col)
 treeview.grid(row=6, column=0, columnspan=2, padx=10, pady=10, sticky='nsew')
+
+# Clear Log button placed on top of the Treeview
+clear_button = ctk.CTkButton(root, text="Clear Log", command=lambda: clear_log(treeview), font=('Arial', 12))
+
+# Place button in a fixed position over the Treeview (adjust x, y as needed)
+clear_button.place(relx=0.92, rely=0.95, anchor='center')  # Adjust relx and rely for positioning
+
 
 root.mainloop()
