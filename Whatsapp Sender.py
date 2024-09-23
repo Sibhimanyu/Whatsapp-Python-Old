@@ -115,7 +115,7 @@ def log_message(sheet, student, phone_number, grade, section, due_fees, message_
     treeview.insert('', 'end', values=[current_datetime, student, phone_number, due_fees, grade, section, message_id])
 
 # Main function to extract student information and send messages
-def extract_student_info(status_label, progress_var, progress_bar, treeview, error_label):
+def extract_student_info(status_label, progress_var, progress_bar, treeview):
     # Set the initial state of the progress bar to 0%
     progress_bar.set(0)
     progress_var.set("0.00%")
@@ -170,14 +170,14 @@ def extract_student_info(status_label, progress_var, progress_bar, treeview, err
     stop_extraction()
 
 # Function to start the extraction process in a new thread
-def start_extraction(status_label, progress_var, progress_bar, treeview, error_label):
+def start_extraction(status_label, progress_var, progress_bar, treeview):
     global stop_requested
     stop_requested.clear()  # Clear the stop request
     start_button.configure(state=tk.DISABLED)
     edit_button.configure(state=tk.DISABLED)
     export_button.configure(state=tk.DISABLED)
     stop_button.configure(state=tk.NORMAL)
-    threading.Thread(target=extract_student_info, args=(status_label, progress_var, progress_bar, treeview, error_label)).start()
+    threading.Thread(target=extract_student_info, args=(status_label, progress_var, progress_bar, treeview)).start()
 
 # Function to stop the extraction process
 def stop_extraction():
@@ -458,12 +458,12 @@ progress_bar.set(0)
 status_label = ctk.CTkLabel(root, text="", font=('Arial', 12))
 status_label.grid(row=2, column=0, columnspan=2, padx=10, pady=5, sticky='w')
 
-error_label = ctk.CTkLabel(root, text="", font=('Arial', 12), text_color='red')
-error_label.grid(row=3, column=0, columnspan=2, padx=10, pady=5, sticky='w')
+# error_label = ctk.CTkLabel(root, text="", font=('Arial', 12), text_color='red')
+# error_label.grid(row=3, column=0, columnspan=2, padx=10, pady=5, sticky='w')
 
 # Parameters frame to display the current parameters
 parameters_frame = ctk.CTkFrame(root)
-parameters_frame.grid(row=4, column=0, columnspan=2, pady=10)
+parameters_frame.grid(row=3, column=0, columnspan=2, pady=10)
 
 ctk.CTkLabel(parameters_frame, text="Message Template:", font=('Arial', 12)).grid(row=0, column=0, padx=10, pady=5, sticky='e')
 template_label = ctk.CTkLabel(parameters_frame, text=message_template, font=('Arial', 12))
@@ -477,38 +477,35 @@ ctk.CTkLabel(parameters_frame, text="Due Date:", font=('Arial', 12)).grid(row=2,
 date_label = ctk.CTkLabel(parameters_frame, text=due_date, font=('Arial', 12))
 date_label.grid(row=2, column=1, padx=10, pady=5, sticky='w')
 
-checkbox_var = ctk.BooleanVar(value=False)  # Default to checked
-checkbox = ctk.CTkCheckBox(root, text="Enable Sample Mode", variable=checkbox_var, onvalue=True, offvalue=False)
-checkbox.grid(row=5, column=0, columnspan=2, padx=10, pady=5, sticky='w')
+# Edit button centered in the frame
+edit_button = ctk.CTkButton(parameters_frame, text="Edit Parameters", command=lambda: edit_parameters(template_label, term_label, date_label), font=('Arial', 12))
+edit_button.grid(row=3, column=0, columnspan=2, padx=10, pady=5, sticky='ew')  # Center the button using columnspan
 
 # Frame for buttons
 button_frame = ctk.CTkFrame(root)
-button_frame.grid(row=5, column=0, columnspan=2, pady=10)
+button_frame.grid(row=5, column=0, columnspan=2, pady=30)
 button_frame.columnconfigure(0, weight=1)
 button_frame.columnconfigure(1, weight=1)
 button_frame.columnconfigure(2, weight=1)
 button_frame.columnconfigure(3, weight=1)
 button_frame.columnconfigure(4, weight=1)  # Adding extra column for the new button
 
-start_button = ctk.CTkButton(button_frame, text="Start Sending", command=lambda: start_extraction(status_label, progress_var, progress_bar, treeview, error_label), font=('Arial', 12))
-start_button.grid(row=0, column=0, padx=10)
+checkbox_var = ctk.BooleanVar(value=False)  # Default to checked
+checkbox = ctk.CTkCheckBox(button_frame, text="Enable Sample Mode", variable=checkbox_var, onvalue=True, offvalue=False)
+checkbox.grid(row=0, column=0, padx=10, pady=5, sticky='w')
 
-stop_button = ctk.CTkButton(button_frame, text="Stop", command=lambda: stop_extraction(), font=('Arial', 12), state=tk.DISABLED)
-stop_button.grid(row=0, column=1, padx=10)
+start_button = ctk.CTkButton(button_frame, text="Start Sending", command=lambda: start_extraction(status_label, progress_var, progress_bar, treeview), font=('Arial', 12))
+start_button.grid(row=0, column=1, padx=10)
 
-edit_button = ctk.CTkButton(button_frame, text="Edit Parameters", command=lambda: edit_parameters(template_label, term_label, date_label), font=('Arial', 12))
-edit_button.grid(row=0, column=2, padx=10)
-
-# clear_button = ctk.CTkButton(root, text="Clear Log", command=lambda: clear_log(treeview), font=('Arial', 12))
-# clear_button.grid(row=7, column=1, pady=10, sticky='e')
+stop_button = ctk.CTkButton(button_frame, text="Stop Sending", command=lambda: stop_extraction(), font=('Arial', 12), state=tk.DISABLED)
+stop_button.grid(row=0, column=2, padx=10)
 
 export_button = ctk.CTkButton(button_frame, text="Export Log", command=lambda: export_log_to_history(treeview), font=('Arial', 12), state=tk.DISABLED)
-export_button.grid(row=0, column=4, padx=10)
+export_button.grid(row=0, column=3, padx=10)
 
 view_history_button = ctk.CTkButton(button_frame, text="View History", command=view_whatsapp_history, font=('Arial', 12))
-view_history_button.grid(row=0, column=5, padx=10)
+view_history_button.grid(row=0, column=4, padx=10)
 
-# Treeview for displaying log
 # Treeview for displaying log
 columns = ["DateTime", "Student", "Phone Number", "Due Fees", "Grade", "Section", "Message ID"]
 treeview = ttk.Treeview(root, columns=columns, show='headings', height=20)
@@ -520,7 +517,7 @@ treeview.grid(row=6, column=0, columnspan=2, padx=10, pady=10, sticky='nsew')
 clear_button = ctk.CTkButton(root, text="Clear Log", command=lambda: clear_log(treeview), font=('Arial', 12))
 
 # Place button in a fixed position over the Treeview (adjust x, y as needed)
-clear_button.place(relx=0.92, rely=0.95, anchor='center')  # Adjust relx and rely for positioning
+clear_button.place(relx=0.92, rely=0.95, anchor='center')
 
 
 root.mainloop()
