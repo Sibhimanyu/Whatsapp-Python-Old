@@ -10,6 +10,15 @@ from datetime import datetime
 message_template, term_in_tamil, due_date = "", "", ""
 settings_file = "parameters.json"
 
+def center_window(window):
+    window.update_idletasks()
+    width = window.winfo_width()
+    height = window.winfo_height()
+    screen_width = window.winfo_screenwidth()
+    screen_height = window.winfo_screenheight()
+    x = (screen_width - width) // 2
+    y = (screen_height - height) // 2
+    window.geometry(f"{width}x{height}+{x}+{y}")
 
 def resource_path(relative_path):
     try:
@@ -251,6 +260,7 @@ def edit_parameters(template_label, term_label, date_label):
     params_window = ctk.CTkToplevel()
     params_window.title("Edit Message Parameters")
     params_window.geometry("500x350")
+    center_window(params_window)
     params_window.attributes("-topmost", True)
 
     # Add the dropdown for message template selection
@@ -295,6 +305,7 @@ def view_whatsapp_history():
         history_window = Toplevel(root)
         history_window.title("WhatsApp Message History")
         history_window.geometry("1200x600")
+        center_window(history_window)
         history_window.attributes("-topmost", True)
         
         # Create a frame for the statistics and history view
@@ -430,6 +441,7 @@ ctk.set_default_color_theme(resource_path("red.json"))  # Themes: "blue" (defaul
 root = ctk.CTk()
 root.title("WhatsApp Message Sender")
 root.geometry("1300x650")  # Increase window size for new labels
+center_window(root)
 root.iconbitmap(resource_path("auro.ico"))
 
 # Configure grid rows and columns for centering
@@ -506,9 +518,22 @@ view_history_button.grid(row=0, column=4, padx=10)
 
 # Treeview for displaying log
 columns = ["DateTime", "Student", "Phone Number", "Due Fees", "Grade", "Section", "Message ID"]
+
+column_widths = {
+    "DateTime": 150,
+    "Student": 150,
+    "Phone Number": 120,
+    "Due Fees": 100,
+    "Grade": 80,
+    "Section": 80,
+    "Message ID": 200
+}
+
 treeview = ttk.Treeview(root, columns=columns, show='headings', height=20)
 for col in columns:
     treeview.heading(col, text=col)
+    treeview.column(col, width=column_widths[col], anchor='center')  # Adjust width and center-align
+
 treeview.grid(row=6, column=0, columnspan=2, padx=10, pady=10, sticky='nsew')
 
 # Clear Log button placed on top of the Treeview
