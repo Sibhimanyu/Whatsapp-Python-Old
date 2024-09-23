@@ -5,10 +5,11 @@ import threading, gspread, os, sys, requests, json
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 
+
 # Global variables for message parameters
 message_template, term_in_tamil, due_date = "", "", ""
-
 settings_file = "parameters.json"
+
 
 def resource_path(relative_path):
     try:
@@ -457,9 +458,6 @@ progress_bar.set(0)
 
 status_label = ctk.CTkLabel(root, text="", font=('Arial', 12))
 status_label.grid(row=2, column=0, columnspan=2, padx=10, pady=5, sticky='w')
-
-# error_label = ctk.CTkLabel(root, text="", font=('Arial', 12), text_color='red')
-# error_label.grid(row=3, column=0, columnspan=2, padx=10, pady=5, sticky='w')
 
 # Parameters frame to display the current parameters
 parameters_frame = ctk.CTkFrame(root)
