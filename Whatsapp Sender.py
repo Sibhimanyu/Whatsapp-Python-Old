@@ -10,15 +10,6 @@ from datetime import datetime
 message_template, term_in_tamil, due_date = "", "", ""
 settings_file = "parameters.json"
 
-def center_window(window):
-    window.update_idletasks()
-    width = window.winfo_width()
-    height = window.winfo_height()
-    screen_width = window.winfo_screenwidth()
-    screen_height = window.winfo_screenheight()
-    x = (screen_width - width) // 2
-    y = (screen_height - height) // 2
-    window.geometry(f"{width}x{height}+{x}+{y}")
 
 def resource_path(relative_path):
     try:
@@ -71,7 +62,7 @@ def open_google_sheet(sheet_url, sheet_name=None):
 def send_facebook_message(phone_number, due_fees, student_name):
     global message_template, term_in_tamil, due_date
     url = "https://graph.facebook.com/v20.0/159339593939407/messages"
-    ACCESS_TOKEN = ''
+    ACCESS_TOKEN = 'EAAMslFZBsCKoBOyBhd718hUNP0qQeCBEeZAsh0EQYdLq7w5lr4QNmnEZBf5X2QfMzhpuTaaZB0ObS2ZAQWmiunuIa7GIq1vKYM972t7DZCbgZAlf3OLycpBxggOhth4V35Ft3y4Kea1RUAJiaecgTzHZB1ejIZAdWB140mmv4bVlGbojcWGOXRIvdKl7lsaTGIaWIXUkZB5ZBLnefp2g70O'
     payload = {
         "messaging_product": "whatsapp",
         "recipient_type": "individual",
@@ -260,7 +251,6 @@ def edit_parameters(template_label, term_label, date_label):
     params_window = ctk.CTkToplevel()
     params_window.title("Edit Message Parameters")
     params_window.geometry("500x350")
-    center_window(params_window)
     params_window.attributes("-topmost", True)
 
     # Add the dropdown for message template selection
@@ -305,7 +295,6 @@ def view_whatsapp_history():
         history_window = Toplevel(root)
         history_window.title("WhatsApp Message History")
         history_window.geometry("1200x600")
-        center_window(history_window)
         history_window.attributes("-topmost", True)
         
         # Create a frame for the statistics and history view
@@ -443,7 +432,6 @@ ctk.set_default_color_theme(resource_path("red.json"))  # Themes: "blue" (defaul
 root = ctk.CTk()
 root.title("WhatsApp Message Sender")
 root.geometry("1300x650")  # Increase window size for new labels
-center_window(root)
 root.iconbitmap(resource_path("auro.ico"))
 
 # Configure grid rows and columns for centering
