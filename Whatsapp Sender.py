@@ -337,8 +337,6 @@ def view_whatsapp_history():
         
         history_columns = ["DateTime", "Student", "Phone Number", "Due Fees", "Grade", "Section", "Message ID"]
         history_treeview = ttk.Treeview(history_frame, columns=history_columns, show='headings', height=30)
-        # for col in history_columns:
-        #     history_treeview.heading(col, text=col)
         for col in history_columns:
             history_treeview.heading(col, text=col)
             history_treeview.column(col, width=column_widths[col], anchor='center')  # Adjust width and center-align
