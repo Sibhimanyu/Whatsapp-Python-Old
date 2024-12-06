@@ -1,0 +1,3 @@
+([('WhatsappSender',
+   '/Users/sibhi/Code/github_Whatsapp/dist/WhatsappSender',
+   'EXECUTABLE')],)
