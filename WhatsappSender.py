@@ -58,11 +58,22 @@ def open_google_sheet(sheet_url, sheet_name=None):
         return sheet
     return spreadsheet  # Return the full spreadsheet if no sheet name is given
 
-# Function to send a Facebook message (WhatsApp)
 def send_facebook_message(phone_number, due_fees, student_name):
     global message_template, term_in_tamil, due_date
     url = "https://graph.facebook.com/v20.0/159339593939407/messages"
     ACCESS_TOKEN = 'EAAMslFZBsCKoBOyBhd718hUNP0qQeCBEeZAsh0EQYdLq7w5lr4QNmnEZBf5X2QfMzhpuTaaZB0ObS2ZAQWmiunuIa7GIq1vKYM972t7DZCbgZAlf3OLycpBxggOhth4V35Ft3y4Kea1RUAJiaecgTzHZB1ejIZAdWB140mmv4bVlGbojcWGOXRIvdKl7lsaTGIaWIXUkZB5ZBLnefp2g70O'
+
+    # Conditional logic: Exclude term_in_tamil if message_template is "hostel_fees_due_tamil"
+    parameters = [
+        {"type": "text", "text": student_name},
+        {"type": "text", "text": due_fees},
+        {"type": "text", "text": due_date}
+    ]
+    
+    # Add term_in_tamil only if template is not "hostel_fees_due_tamil"
+    if message_template != "hostel_fees_due_tamil":
+        parameters.insert(1, {"type": "text", "text": term_in_tamil})
+
     payload = {
         "messaging_product": "whatsapp",
         "recipient_type": "individual",
@@ -76,12 +87,7 @@ def send_facebook_message(phone_number, due_fees, student_name):
             "components": [
                 {
                     "type": "body",
-                    "parameters": [
-                        {"type": "text", "text": student_name},
-                        {"type": "text", "text": term_in_tamil},
-                        {"type": "text", "text": due_fees},
-                        {"type": "text", "text": due_date}
-                    ]
+                    "parameters": parameters
                 }
             ]
         }
