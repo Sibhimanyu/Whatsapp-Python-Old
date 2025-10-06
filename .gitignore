@@ -1,0 +1,18 @@
+# Sensitive configuration files
+whatsapp.json
+parameters.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment
+.env
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
